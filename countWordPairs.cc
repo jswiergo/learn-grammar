@@ -86,11 +86,12 @@ int main()
         line_number++;
 
         stringstream ss(line);
-        string word1, word2;
+        string word1, word2, word3;
         getline(ss, word1, '\t');
         getline(ss, word2, '\t');
+        getline(ss, word3, '\t');
 
-        if (!word1.length() || !word2.length())
+        if (!word1.length() || !word2.length() || word3.length())
         {
             cerr << "Wrong format at line " << line_number << ":" << endl;
             cerr << line << endl;
@@ -98,6 +99,12 @@ int main()
         }
 
         insert_word_pair(word1, word2);
+
+        if (line_number % 10000 == 0)
+        {
+            cerr << "Line: " << line_number << " words: " << words.size();
+            cerr << " word pairs: " << word_pair_counts.size() << endl;
+        }
     }
 
     dump_counts();

@@ -49,6 +49,11 @@ int main()
                     matched_lines = 0;
                 continue;
             case 2:
+                if (line.length() < IGNORED_LENGTH)
+                {
+                    matched_lines = 0;
+                    continue;
+                }
                 if (line.find(LEFT_WALL_PATTERN) != string::npos)
                     first_word = LEFT_WALL_WORD;
                 else
@@ -56,6 +61,11 @@ int main()
                 matched_lines = 3;
                 continue;
             case 3:
+                if (line.length() < IGNORED_LENGTH)
+                {
+                    matched_lines = 0;
+                    continue;
+                }
                 second_word = line.substr(PREFIX_LENGTH, line.length() - IGNORED_LENGTH);
                 cout << first_word << "\t" << second_word << endl;
                 matched_lines = 0;
