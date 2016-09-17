@@ -1,5 +1,5 @@
 CXX = g++
-CXX_FLAGS = -Wall
+CXX_FLAGS = -Wall -std=c++11
 
 PROGRAMS = filterWordPairs countWordPairs
 

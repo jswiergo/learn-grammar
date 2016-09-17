@@ -3,17 +3,31 @@
 #include <string>
 #include <sstream>
 #include <vector>
-#include <map>
+#include <unordered_map>
 
 using namespace std;
 
 typedef size_t index_t;
 typedef pair<index_t, index_t> pair_index_t;
 
+namespace std
+{
+    template<>
+    struct hash<pair_index_t>
+    {
+        size_t operator()(pair_index_t const& p) const
+        {
+            auto h1 = std::hash<index_t>{}(p.first);
+            auto h2 = std::hash<index_t>{}(p.second);
+            return h1 ^ h2;
+        }
+    };
+}
+
 vector<string> words;
 vector<int> word_counts;
-map<string, index_t> words_index;
-map<pair_index_t, int> word_pair_counts;
+unordered_map<string, index_t> words_index;
+unordered_map<pair_index_t, int> word_pair_counts;
 
 index_t insert_word(const string& word)
 {
@@ -22,7 +36,9 @@ index_t insert_word(const string& word)
     {
         index = words_index[word];
         word_counts[index]++;
-    } else {
+    }
+    else
+    {
         index = words.size();
         words.push_back(word);
         words_index.insert(make_pair(word, index));
@@ -54,7 +70,7 @@ void dump_counts()
     }
 
     cout << word_pair_counts.size() << endl;
-    for (map<pair_index_t, int>::iterator it = word_pair_counts.begin(); it != word_pair_counts.end(); ++it)
+    for (auto it = word_pair_counts.begin(); it != word_pair_counts.end(); ++it)
     {
         cout << it->first.first << "\t" << it->first.second << "\t" << it->second << endl;
     }
