@@ -1,7 +1,7 @@
 CXX = g++
 CXX_FLAGS = -Wall
 
-PROGRAMS = filterWordPairs
+PROGRAMS = filterWordPairs countWordPairs
 
 .PHONY: all clean
 
@@ -11,4 +11,7 @@ clean:
 	rm -f *~ $(PROGRAMS)
 
 filterWordPairs: filterWordPairs.cc
+	$(CXX) -o $@ $^ $(CXX_FLAGS)
+
+countWordPairs: countWordPairs.cc
 	$(CXX) -o $@ $^ $(CXX_FLAGS)
