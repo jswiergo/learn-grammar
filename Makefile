@@ -1,7 +1,7 @@
 CXX = g++
 CXX_FLAGS = -Wall -std=c++11
 
-PROGRAMS = filterWordPairs countWordPairs
+PROGRAMS = filterWordPairs countWordPairs mergeWordPairs
 
 .PHONY: all clean
 
@@ -14,4 +14,7 @@ filterWordPairs: filterWordPairs.cc
 	$(CXX) -o $@ $^ $(CXX_FLAGS)
 
 countWordPairs: countWordPairs.cc
+	$(CXX) -o $@ $^ $(CXX_FLAGS)
+
+mergeWordPairs: mergeWordPairs.cc
 	$(CXX) -o $@ $^ $(CXX_FLAGS)
