@@ -8,13 +8,16 @@ PROGRAMS = filterWordPairs countWordPairs mergeWordPairs
 all: $(PROGRAMS)
 
 clean:
-	rm -f *~ $(PROGRAMS)
+	rm -f *~ *.o $(PROGRAMS)
+
+%.o: %.cc
+	$(CXX) -o $@ -c $< $(CXX_FLAGS)
 
 filterWordPairs: filterWordPairs.cc
 	$(CXX) -o $@ $^ $(CXX_FLAGS)
 
-countWordPairs: countWordPairs.cc
+countWordPairs: countWordPairs.cc wordPairs.o
 	$(CXX) -o $@ $^ $(CXX_FLAGS)
 
-mergeWordPairs: mergeWordPairs.cc
+mergeWordPairs: mergeWordPairs.cc wordPairs.o
 	$(CXX) -o $@ $^ $(CXX_FLAGS)
