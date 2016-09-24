@@ -2,6 +2,7 @@
 
 # Catalogs
 split_dir=split-articles
+relex_out_dir=relex-outputs
 finished_dir=finished-articles
 counted_dir=counted-articles
 logs_dir=logs
