@@ -6,7 +6,7 @@ cd $base_dir
 source ./config.sh
 
 filename=$1
-lang=$2
+lang=${2:-en}
 
 # Split the filename into two parts
 base=`echo $filename | cut -d \/ -f 1`
