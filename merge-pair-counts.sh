@@ -6,10 +6,12 @@ cd $base_dir
 source ./config.sh
 
 for subdir in $(ls -d ${counted_dir}/*); do
+    if [ -f ${subdir} ]; then continue; fi
+
     echo "Merge ${subdir}"
     time ./merger.py ./mergeWordPairs "${subdir}/*[!.all]" > ${subdir}/counted.all
     echo
 done
 
 echo "Final merge"
-time ./merger.py ./mergeWordPairs "${counted_dir}/*/*[!.all]" > ${counted_dir}/counted.all
+time ./merger.py ./mergeWordPairs "${counted_dir}/*/counted.all" > ${counted_dir}/counted.all
