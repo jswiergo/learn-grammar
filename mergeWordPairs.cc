@@ -6,7 +6,7 @@ using namespace std;
 
 int line_number;
 
-void merge_file_word_counts(ifstream& file)
+void merge_file_word_counts(istream& file)
 {
     string line;
     index_t total_words;
@@ -28,7 +28,7 @@ void merge_file_word_counts(ifstream& file)
     }
 }
 
-void merge_file_word_pair_counts(ifstream& file)
+void merge_file_word_pair_counts(istream& file)
 {
     string line;
     index_t total_word_pairs;

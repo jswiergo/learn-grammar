@@ -1,4 +1,6 @@
+#include <iomanip>
 #include <vector>
+#include <cmath>
 #include <unordered_map>
 #include "wordPairs.h"
 
@@ -23,6 +25,16 @@ vector<int> word_counts;
 unordered_map<string, index_t> words_index;
 unordered_map<pair_index_t, int> word_pair_counts;
 unordered_map<index_t, index_t> merged_indices_map;
+
+// for mutual information
+typedef double entropy_t;
+
+long long int word_pairs_total_count;
+vector<int> word_left_counts;
+vector<int> word_right_counts;
+vector<entropy_t> word_left_entropies;
+vector<entropy_t> word_right_entropies;
+unordered_map<pair_index_t, entropy_t> word_pair_MIs;
 
 void clear_indices_map()
 {
@@ -80,17 +92,85 @@ void merge_word_pair_count(index_t unmerged_index1, index_t unmerged_index2, int
     count_word_pair(pair_index, count);
 }
 
-void dump_counts(ostream& os)
+#define entropy(cnt) (-log2((entropy_t)cnt/(entropy_t)word_pairs_total_count))
+
+void calculate_mutual_informations()
+{
+    word_pairs_total_count = 0;
+    for (auto wp: word_pair_counts)
+    {
+        word_pairs_total_count += wp.second;
+    }
+
+    word_left_counts.assign(words.size(), 0);
+    word_right_counts.assign(words.size(), 0);
+    for (auto wp: word_pair_counts)
+    {
+        index_t index1 = wp.first.first;
+        index_t index2 = wp.first.second;
+
+        int pair_count = wp.second;
+        word_left_counts[index1] += pair_count;
+        word_right_counts[index2] += pair_count;
+    }
+
+    word_left_entropies.assign(words.size(), 0.0);
+    word_right_entropies.assign(words.size(), 0.0);
+    for (index_t i = 0; i < words.size(); ++i)
+    {
+        word_left_entropies[i] = entropy(word_left_counts[i]);
+        word_right_entropies[i] = entropy(word_right_counts[i]);
+    }
+
+    for (auto wp: word_pair_counts)
+    {
+        index_t index1 = wp.first.first;
+        index_t index2 = wp.first.second;
+        int pair_count = wp.second;
+
+        entropy_t pair_entropy = entropy(pair_count);
+        entropy_t pair_MI = word_left_entropies[index1]
+                          + word_right_entropies[index2]
+                          - pair_entropy;
+        pair_index_t pair_index = make_pair(index1, index2);
+        word_pair_MIs.insert(make_pair(pair_index, pair_MI));
+    }
+}
+
+
+void dump_words(ostream& os)
 {
     os << words.size() << endl;
     for (index_t i = 0; i < words.size(); ++i)
     {
-        os << words[i] << "\t" << word_counts[i] << endl;
+        os << words[i] << "\t";
+        os << word_counts[i] << endl;
     }
+}
+
+void dump_counts(ostream& os)
+{
+    dump_words(os);
 
     os << word_pair_counts.size() << endl;
-    for (auto it = word_pair_counts.begin(); it != word_pair_counts.end(); ++it)
+    for (auto wp: word_pair_counts)
     {
-        os << it->first.first << "\t" << it->first.second << "\t" << it->second << endl;
+        os << wp.first.first << "\t";
+        os << wp.first.second << "\t";
+        os << wp.second << endl;
+    }
+}
+
+void dump_MIs(ostream& os)
+{
+    dump_words(os);
+
+    os << word_pair_MIs.size() << endl;
+    os << setprecision(8);
+    for (auto wp: word_pair_MIs)
+    {
+        os << words[wp.first.first] << "\t";
+        os << words[wp.first.second] << "\t";
+        os << wp.second << endl;
     }
 }
