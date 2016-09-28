@@ -5,4 +5,4 @@ cd $base_dir
 
 catalog=${1:-wiki-pages}
 
-time find $catalog -type f -exec ./count-one.sh {} en \;
+time find $catalog -type f -print0 | xargs -0 -n 1 -P 3 ./count-one.sh en

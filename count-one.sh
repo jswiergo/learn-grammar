@@ -6,8 +6,8 @@ cd $base_dir
 source ./config.sh
 log_file=${logs_dir}/count_articles.log
 
-filename=$1
-lang=${2:-en}
+lang=$1
+filename=$2
 
 # Logging info
 start_miliseconds=$(($(date +%s%N)/1000000))
