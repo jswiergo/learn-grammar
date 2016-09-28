@@ -1,7 +1,8 @@
 CXX = g++
 CXX_FLAGS = -Wall -std=c++11
+LD_FLAGS= -llink-grammar
 
-PROGRAMS = filterWordPairs countWordPairs mergeWordPairs calcWordPairsMI
+PROGRAMS = parseWordPairs countWordPairs mergeWordPairs calcWordPairsMI
 
 .PHONY: all clean
 
@@ -13,8 +14,8 @@ clean:
 %.o: %.cc
 	$(CXX) -o $@ -c $< $(CXX_FLAGS)
 
-filterWordPairs: filterWordPairs.cc
-	$(CXX) -o $@ $^ $(CXX_FLAGS)
+parseWordPairs: parseWordPairs.cc
+	$(CXX) -o $@ $^ $(CXX_FLAGS) $(LD_FLAGS)
 
 countWordPairs: countWordPairs.cc wordPairs.o
 	$(CXX) -o $@ $^ $(CXX_FLAGS)
