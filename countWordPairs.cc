@@ -5,6 +5,9 @@ using namespace std;
 
 int main()
 {
+    Words words;
+    WordPairs word_pairs(words);
+
     string line;
     int line_number = 0;
 
@@ -24,7 +27,8 @@ int main()
             cerr << line << endl;
             exit(1);
         }
-        insert_word_pair(word1, word2);
+        word_pairs.insert(word1, word2);
     }
-    dump_counts(cout);
+    words.save(cout);
+    word_pairs.save(cout);
 }

@@ -1,48 +1,11 @@
-#include <iomanip>
-#include <vector>
-#include <cmath>
-#include <unordered_map>
+#include <sstream>
 #include "wordPairs.h"
 
 using namespace std;
 
-namespace std
+IdxT Words::insert(const string& word, int left_count, int right_count)
 {
-    template<>
-    struct hash<pair_index_t>
-    {
-        size_t operator()(pair_index_t const& p) const
-        {
-            auto h1 = std::hash<index_t>{}(p.first);
-            auto h2 = std::hash<index_t>{}(p.second);
-            return h1 ^ h2;
-        }
-    };
-}
-
-vector<string> words;
-vector<int> word_left_counts;
-vector<int> word_right_counts;
-unordered_map<string, index_t> words_index;
-unordered_map<pair_index_t, int> word_pair_counts;
-unordered_map<index_t, index_t> merged_indices_map;
-
-// for mutual information
-typedef double entropy_t;
-
-long long int word_pairs_total_count;
-vector<entropy_t> word_left_entropies;
-vector<entropy_t> word_right_entropies;
-unordered_map<pair_index_t, entropy_t> word_pair_MIs;
-
-void clear_indices_map()
-{
-    merged_indices_map.clear();
-}
-
-index_t insert_word(const string& word, int left_count, int right_count)
-{
-    index_t index;
+    IdxT index;
     if (words_index.find(word) != words_index.end())
     {
         index = words_index[word];
@@ -57,17 +20,54 @@ index_t insert_word(const string& word, int left_count, int right_count)
         word_left_counts.push_back(left_count);
         word_right_counts.push_back(right_count);
     }
+    left_total_count += left_count;
+    right_total_count += right_count;
     return index;
 }
 
-index_t merge_word(const string& word, index_t unmerged_index, int left_count, int right_count)
+IdxT Words::merge(const string& word, IdxT unmerged_index, int left_count, int right_count)
 {
-    index_t merged_index = insert_word(word, left_count, right_count);
-    merged_indices_map.insert(make_pair(unmerged_index, merged_index));
+    IdxT merged_index = insert(word, left_count, right_count);
+    merged_indices[unmerged_index] = merged_index;
     return merged_index;
 }
 
-void count_word_pair(pair_index_t pair_index, int count=1)
+void Words::load(istream& istream, bool merging)
+{
+    string line;
+    getline(istream, line);
+    IdxT total_words = stoi(line);
+
+    merged_indices.clear();
+    merged_indices.resize(total_words);
+
+    for (IdxT i = 0; i < total_words; ++i)
+    {
+        getline(istream, line);
+        stringstream ss(line);
+        string token1, token2, token3;
+        getline(ss, token1, '\t');
+        getline(ss, token2, '\t');
+        getline(ss, token3, '\t');
+        if (merging)
+            merge(token1, i, stoi(token2), stoi(token3));
+        else
+            insert(token1, stoi(token2), stoi(token3));
+    }
+}
+
+void Words::save(ostream& os)
+{
+    os << words.size() << endl;
+    for (IdxT i = 0; i < words.size(); ++i)
+    {
+        os << words[i] << "\t";
+        os << word_left_counts[i] << "\t";
+        os << word_right_counts[i] << endl;
+    }
+}
+
+void WordPairs::count_word_pair(PairIdxT pair_index, int count)
 {
     if (word_pair_counts.find(pair_index) != word_pair_counts.end())
     {
@@ -77,71 +77,16 @@ void count_word_pair(pair_index_t pair_index, int count=1)
     }
 }
 
-void insert_word_pair(const string& word1, const string& word2, int count)
+void WordPairs::insert(const string& word1, const string& word2, int count)
 {
-    index_t index1 = insert_word(word1, 1, 0);
-    index_t index2 = insert_word(word2, 0, 1);
-    pair_index_t pair_index = make_pair(index1, index2);
+    IdxT index1 = words.insert(word1, count, 0);
+    IdxT index2 = words.insert(word2, 0, count);
+    PairIdxT pair_index = make_pair(index1, index2);
     count_word_pair(pair_index, count);
 }
 
-void merge_word_pair_count(index_t unmerged_index1, index_t unmerged_index2, int count)
+void WordPairs::save(ostream& os)
 {
-    index_t index1 = merged_indices_map[unmerged_index1];
-    index_t index2 = merged_indices_map[unmerged_index2];
-    pair_index_t pair_index = make_pair(index1, index2);
-    count_word_pair(pair_index, count);
-}
-
-#define entropy(cnt) (-log2((entropy_t)cnt/(entropy_t)word_pairs_total_count))
-
-void calculate_mutual_informations()
-{
-    word_pairs_total_count = 0;
-    for (auto wp: word_pair_counts)
-    {
-        word_pairs_total_count += wp.second;
-    }
-
-    word_left_entropies.assign(words.size(), 0.0);
-    word_right_entropies.assign(words.size(), 0.0);
-    for (index_t i = 0; i < words.size(); ++i)
-    {
-        word_left_entropies[i] = entropy(word_left_counts[i]);
-        word_right_entropies[i] = entropy(word_right_counts[i]);
-    }
-
-    for (auto wp: word_pair_counts)
-    {
-        index_t index1 = wp.first.first;
-        index_t index2 = wp.first.second;
-        int pair_count = wp.second;
-
-        entropy_t pair_entropy = entropy(pair_count);
-        entropy_t pair_MI = word_left_entropies[index1]
-                          + word_right_entropies[index2]
-                          - pair_entropy;
-        pair_index_t pair_index = make_pair(index1, index2);
-        word_pair_MIs.insert(make_pair(pair_index, pair_MI));
-    }
-}
-
-
-void dump_words(ostream& os)
-{
-    os << words.size() << endl;
-    for (index_t i = 0; i < words.size(); ++i)
-    {
-        os << words[i] << "\t";
-        os << word_left_counts[i] << "\t";
-        os << word_right_counts[i] << endl;
-    }
-}
-
-void dump_counts(ostream& os)
-{
-    dump_words(os);
-
     os << word_pair_counts.size() << endl;
     for (auto wp: word_pair_counts)
     {
@@ -151,16 +96,24 @@ void dump_counts(ostream& os)
     }
 }
 
-void dump_MIs(ostream& os)
+void WordPairs::translate(istream& is, ostream& os)
 {
-    dump_words(os);
+    string line;
+    getline(is, line);
+    int total_pairs = stoi(line);
 
-    os << word_pair_MIs.size() << endl;
-    os << setprecision(8);
-    for (auto wp: word_pair_MIs)
+    for (int i = 0; i < total_pairs; ++i)
     {
-        os << wp.first.first << "\t";
-        os << wp.first.second << "\t";
-        os << wp.second << endl;
+        getline(is, line);
+        stringstream ss(line);
+        string token1, token2, token3;
+        getline(ss, token1, '\t');
+        getline(ss, token2, '\t');
+        getline(ss, token3, '\t');
+        IdxT unmerged_index1 = stoi(token1);
+        IdxT unmerged_index2 = stoi(token2);
+        os << words.get_merged_index(unmerged_index1) << "\t";
+        os << words.get_merged_index(unmerged_index2) << "\t";
+        os << token3 << endl;
     }
 }

@@ -1,83 +1,48 @@
 #include <fstream>
-#include <sstream>
 #include "wordPairs.h"
 
 using namespace std;
 
-int line_number;
-
-void merge_file_word_counts(istream& file)
-{
-    string line;
-    index_t total_words;
-
-    getline(file, line);
-    line_number++;
-    total_words = stoi(line);
-
-    for (index_t i = 0; i < total_words; ++i)
-    {
-        getline(file, line);
-        line_number++;
-
-        stringstream ss(line);
-        string word1, word2, word3;
-        getline(ss, word1, '\t');
-        getline(ss, word2, '\t');
-        getline(ss, word3, '\t');
-        merge_word(word1, i, stoi(word2), stoi(word3));
-    }
-}
-
-void merge_file_word_pair_counts(istream& file)
-{
-    string line;
-    index_t total_word_pairs;
-
-    getline(file, line);
-    line_number++;
-    total_word_pairs = stoi(line);
-
-    for (index_t i = 0; i < total_word_pairs; ++i)
-    {
-        getline(file, line);
-        line_number++;
-
-        stringstream ss(line);
-        string word1, word2, word3;
-        getline(ss, word1, '\t');
-        getline(ss, word2, '\t');
-        getline(ss, word3, '\t');
-        
-        index_t index1 = stoi(word1);
-        index_t index2 = stoi(word2);
-        merge_word_pair_count(index1, index2, stoi(word3));
-    }
-}
-
-void merge_file(string filename)
-{
-    line_number = 1;
-    clear_indices_map();
-
-    try {
-        ifstream file;
-        file.open(filename);
-        merge_file_word_counts(file);
-        merge_file_word_pair_counts(file);
-        file.close();        
-    } catch (exception e) {
-        cerr << "Exception in merge file: " << filename;
-        cerr << ":" << line_number << endl;
-        cerr << e.what() << endl;
-    }
-}
-
 int main(int argc, char** argv)
 {
-    for (int i = 1; i < argc; ++i)
+    if (argc < 3)
     {
-        merge_file(argv[i]);
+        cerr << "usage: " << argv[0];
+        cerr << " <words_output_filename>";
+        cerr << " <word_pairs_output_filename>";
+        cerr << " <files_to_merge>...." << endl;
+        exit(1);
     }
-    dump_counts(cout);
+
+    Words words;
+    WordPairs word_pairs(words);
+
+    string words_filename(argv[1]);
+    string word_pairs_filename(argv[2]);
+    string filename;
+
+    ofstream word_pairs_file;
+    word_pairs_file.open(word_pairs_filename);
+
+    try {
+        for (int i = 3; i < argc; ++i)
+        {
+            filename = argv[i];
+            ifstream file_to_merge;
+            file_to_merge.open(filename);
+            words.load(file_to_merge, true);
+            word_pairs.translate(file_to_merge, word_pairs_file);
+            file_to_merge.close();
+        }
+    } catch (exception e) {
+        cerr << "Exception in merge file: " << filename;
+        cerr << e.what() << endl;
+    }
+
+    word_pairs_file.close();
+
+    ofstream words_file;
+    words_file.open(words_filename);
+    words.save(words_file);
+    words_file.close();
 }
