@@ -17,7 +17,7 @@ protected:
     unordered_map<T, Node*> nodes;
 
     Node* find(Node* n);
-    void unionSets(Node* nx, Node* ny);
+    void union_sets(Node* nx, Node* ny);
 
 public:
     UnionSet() {};
@@ -25,8 +25,8 @@ public:
     ~UnionSet();
 
     void add(const T& v);
-    bool sameSet(const T& v1, const T& v2);
-    void unionSets(const T& v1, const T& v2);
+    bool same_set(const T& v1, const T& v2);
+    void union_sets(const T& v1, const T& v2);
 };
 
 template<typename T>
@@ -69,7 +69,7 @@ typename UnionSet<T>::Node* UnionSet<T>::find(UnionSet<T>::Node * n)
 }
 
 template<typename T>
-void UnionSet<T>::unionSets(UnionSet<T>::Node* nx, UnionSet<T>::Node* ny)
+void UnionSet<T>::union_sets(UnionSet<T>::Node* nx, UnionSet<T>::Node* ny)
 {
     UnionSet<T>::Node* xRoot = find(nx);
     UnionSet<T>::Node* yRoot = find(ny);
@@ -89,7 +89,7 @@ void UnionSet<T>::unionSets(UnionSet<T>::Node* nx, UnionSet<T>::Node* ny)
 }
 
 template<typename T>
-bool UnionSet<T>::sameSet(const T& v1, const T& v2)
+bool UnionSet<T>::same_set(const T& v1, const T& v2)
 {
     if (nodes.find(v1) == nodes.end()) return false;
     if (nodes.find(v2) == nodes.end()) return false;
@@ -99,9 +99,9 @@ bool UnionSet<T>::sameSet(const T& v1, const T& v2)
 }
 
 template<typename T>
-void UnionSet<T>::unionSets(const T& v1, const T& v2)
+void UnionSet<T>::union_sets(const T& v1, const T& v2)
 {
     if (nodes.find(v1) == nodes.end()) return;
     if (nodes.find(v2) == nodes.end()) return;
-    unionSets(nodes[v1], nodes[v2]);
+    union_sets(nodes[v1], nodes[v2]);
 }
