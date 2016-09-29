@@ -23,10 +23,11 @@ void merge_file_word_counts(istream& file)
         line_number++;
 
         stringstream ss(line);
-        string word1, word2;
+        string word1, word2, word3;
         getline(ss, word1, '\t');
         getline(ss, word2, '\t');
-        merge_word(word1, i, stoi(word2));
+        getline(ss, word3, '\t');
+        merge_word(word1, i, stoi(word2), stoi(word3));
     }
 }
 
