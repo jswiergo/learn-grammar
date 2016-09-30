@@ -1,74 +1,57 @@
+#include <cmath>
+#include <iomanip>
 #include <fstream>
 #include <sstream>
-#include "wordPairs.h"
+#include "words.h"
 
 using namespace std;
 
-int line_number;
+typedef double entropy_t;
 
-// copy & paste for now
+Words words;
+int total_count;
 
-void merge_file_word_counts(istream& file)
+#define entropy(cnt) (-log2((entropy_t)cnt/(entropy_t)total_count))
+
+void translateCountToMutualInformation(istream& is, ostream& os)
 {
     string line;
-    index_t total_words;
+    getline(is, line);
 
-    getline(file, line);
-    line_number++;
-    total_words = stoi(line);
+    IdxT total_word_pairs = stoi(line);
+    os << total_word_pairs << endl;
 
-    for (index_t i = 0; i < total_words; ++i)
+    for (IdxT i = 0; i < total_word_pairs; ++i)
     {
-        getline(file, line);
-        line_number++;
-
+        getline(is, line);
         stringstream ss(line);
-        string word1, word2, word3;
-        getline(ss, word1, '\t');
-        getline(ss, word2, '\t');
-        getline(ss, word3, '\t');
-        merge_word(word1, i, stoi(word2), stoi(word3));
-    }
-}
+        string token1, token2, token3;
+        getline(ss, token1, '\t');
+        getline(ss, token2, '\t');
+        getline(ss, token3, '\t');
 
-void merge_file_word_pair_counts(istream& file)
-{
-    string line;
-    index_t total_word_pairs;
+        int left_count = words.get_left_count(stoi(token1));
+        int right_count = words.get_right_count(stoi(token2));
+        int pair_count = stoi(token3);
 
-    getline(file, line);
-    line_number++;
-    total_word_pairs = stoi(line);
+        entropy_t left_entropy = entropy(left_count);
+        entropy_t right_entropy = entropy(right_count);
+        entropy_t pair_entropy = entropy(pair_count);
+        entropy_t mutual_information = left_entropy + right_entropy - pair_entropy;
 
-    for (index_t i = 0; i < total_word_pairs; ++i)
-    {
-        getline(file, line);
-        line_number++;
-
-        stringstream ss(line);
-        string word1, word2, word3;
-        getline(ss, word1, '\t');
-        getline(ss, word2, '\t');
-        getline(ss, word3, '\t');
-
-        index_t index1 = stoi(word1);
-        index_t index2 = stoi(word2);
-        merge_word_pair_count(index1, index2, stoi(word3));
+        os << token1 << "\t";
+        os << token2 << "\t";
+        os << mutual_information << endl;
     }
 }
 
 int main()
 {
-    line_number = 1;
+    words.load(cin);
+    words.save(cout);
 
-    try {
-        merge_file_word_counts(cin);
-        merge_file_word_pair_counts(cin);
-    } catch (exception e) {
-        cerr << "Exception in parsing word pair counts file: ";
-        cerr << ":" << line_number << endl;
-        cerr << e.what() << endl;
-    }
-    calculate_mutual_informations();
-    dump_MIs(cout);
+    total_count = words.get_left_total_count();
+
+    cout << setprecision(10);
+    translateCountToMutualInformation(cin, cout);
 }
