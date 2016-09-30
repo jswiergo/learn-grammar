@@ -17,14 +17,14 @@ clean:
 parseWordPairs: parseWordPairs.cc
 	$(CXX) -o $@ $^ $(CXX_FLAGS) $(LD_FLAGS)
 
-countWordPairs: countWordPairs.cc wordPairs.o
-	$(CXX) -o $@ $^ $(CXX_FLAGS)
-
-mergeWordPairs: mergeWordPairs.cc wordPairs.o
-	$(CXX) -o $@ $^ $(CXX_FLAGS)
-
 sumUniquePairs: sumUniquePairs.cc
 	$(CXX) -o $@ $^ $(CXX_FLAGS)
 
-calcWordPairsMI: calcWordPairsMI.cc wordPairs.o
+countWordPairs: countWordPairs.cc words.o wordPairs.o
+	$(CXX) -o $@ $^ $(CXX_FLAGS)
+
+mergeWordPairs: mergeWordPairs.cc words.o wordPairs.o
+	$(CXX) -o $@ $^ $(CXX_FLAGS)
+
+calcWordPairsMI: calcWordPairsMI.cc words.o wordPairs.o
 	$(CXX) -o $@ $^ $(CXX_FLAGS)

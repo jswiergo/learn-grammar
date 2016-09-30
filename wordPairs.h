@@ -1,14 +1,12 @@
 #include <iostream>
 #include <string>
-#include <vector>
 #include <unordered_map>
+#include "words.h"
 
 using namespace std;
 
-typedef size_t IdxT;
 typedef pair<IdxT, IdxT> PairIdxT;
 
-// This is only for WordPairs map structure
 namespace std
 {
     template<>
@@ -22,36 +20,6 @@ namespace std
         }
     };
 }
-
-class Words
-{
-protected:
-    vector<string> words;
-    vector<int> word_left_counts;
-    vector<int> word_right_counts;
-    unordered_map<string, IdxT> words_index;
-    vector<IdxT> merged_indices;
-
-    int left_total_count;
-    int right_total_count;
-
-    IdxT merge(const string& word, IdxT unmerged_index, int left_count, int right_count);
-
-public:
-    Words() { left_total_count = 0; right_total_count = 0; };
-
-    IdxT insert(const string& word, int left_count, int right_count);
-
-    int get_left_count(IdxT index) { return word_left_counts[index]; };
-    int get_right_count(IdxT index) { return word_right_counts[index]; };
-    size_t size() { return words.size(); };
-    int get_left_total_count() { return left_total_count; };
-    int get_right_total_count() { return right_total_count; };
-    IdxT get_merged_index(IdxT unmerged_index) { return merged_indices[unmerged_index]; }
-
-    void load(istream& is, bool merging=false);
-    void save(ostream& os);
-};
 
 class WordPairs
 {
