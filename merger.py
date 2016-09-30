@@ -10,9 +10,7 @@ if len(sys.argv) < 3:
     print "Usage: %s <glob_pattern> <merger_program> <merger_program_params>...." % sys.argv[0]
     exit(1)
 
-params = []
-for i in xrange(2, len(sys.argv)):
-    params.append(sys.argv[i])
+params = sys.argv[2:]
 
 for f in glob.glob(sys.argv[1]):
     params.append(os.path.abspath(f))

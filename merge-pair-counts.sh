@@ -5,22 +5,29 @@ cd $base_dir
 
 source ./config.sh
 
+function merge_counted_files
+{
+    local input_glob=$1
+    local outdir=$2
+
+    file_counted="${outdir}/counted.all"
+    file_pairs="${outdir}/pairs.all"
+    file_unique="${outdir}/unique.all"
+
+    ./merger.py "${input_glob}" ./mergeWordPairs $file_counted $file_pairs
+    sort -k1,2 $file_pairs | ./sumUniquePairs > $file_unique
+    wc -l $file_unique | cut -d " " -f1 >> $file_counted
+    cat $file_unique >> $file_counted
+    rm $file_pairs $file_unique
+}
+
 for subdir in $(ls -d ${counted_dir}/*); do
     if [ -f ${subdir} ]; then continue; fi
 
     echo $(date) "Merge ${subdir}"
-    ./merger.py "${subdir}/*[!.all]" ./mergeWordPairs "${subdir}/counted.all" "${subdir}/pairs.all"
-    sort -n -k1,2 "${subdir}/pairs.all" | ./sumUniquePairs > "${subdir}/unique_pairs.all"
-    wc -l "${subdir}/unique_pairs.all" | cut -d " " -f1 >> "${subdir}/counted.all"
-    cat "${subdir}/unique_pairs.all" >> "${subdir}/counted.all"
-    rm ${subdir}/*pairs.all
+    merge_counted_files "${subdir}/*[!.all]" $subdir
 done
 
 echo $(date) "Final merge"
-./merger.py "${counted_dir}/*/counted.all" ./mergeWordPairs "${counted_dir}/counted.all" "${counted_dir}/pairs.all"
-sort -n -k1,2 "${counted_dir}/pairs.all" | ./sumUniquePairs >> "${counted_dir}/unique_pairs.all"
-wc -l "${counted_dir}/unique_pairs.all" | cut -d " " -f1 >> "${counted_dir}/counted.all"
-cat "${counted_dir}/unique_pairs.all" >> "${counted_dir}/counted.all"
-rm ${counted_dir}/*pairs.all
-
+merge_counted_files "${counted_dir}/*/counted.all" $counted_dir
 echo $(date) "Finished"

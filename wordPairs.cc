@@ -36,6 +36,8 @@ void Words::load(istream& istream, bool merging)
 {
     string line;
     getline(istream, line);
+    if (line == "") return;  // skip empty files
+
     IdxT total_words = stoi(line);
 
     merged_indices.clear();
@@ -100,6 +102,8 @@ void WordPairs::translate(istream& is, ostream& os)
 {
     string line;
     getline(is, line);
+    if (line == "") return;  // skip empty files
+
     int total_pairs = stoi(line);
 
     for (int i = 0; i < total_pairs; ++i)

@@ -35,7 +35,7 @@ int main(int argc, char** argv)
             file_to_merge.close();
         }
     } catch (exception e) {
-        cerr << "Exception in merge file: " << filename;
+        cerr << "Exception in merge file: " << filename << endl;
         cerr << e.what() << endl;
     }
 
