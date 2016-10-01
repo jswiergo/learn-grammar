@@ -2,7 +2,12 @@ CXX = g++
 CXX_FLAGS = -Wall -std=c++11
 LD_FLAGS= -llink-grammar
 
-PROGRAMS = parseWordPairs sumUniquePairs countWordPairs mergeWordPairs calcWordPairsMI
+PROGRAMS = parseWordPairs \
+           parseWordIndexes \
+           sumUniquePairs \
+           countWordPairs \
+           mergeWordPairs \
+           calcWordPairsMI
 
 .PHONY: all clean
 
@@ -14,7 +19,10 @@ clean:
 %.o: %.cc
 	$(CXX) -o $@ -c $< $(CXX_FLAGS)
 
-parseWordPairs: parseWordPairs.cc
+parseWordPairs: parseWordPairs.cc linkGrammar.o
+	$(CXX) -o $@ $^ $(CXX_FLAGS) $(LD_FLAGS)
+
+parseWordIndexes: parseWordIndexes.cc linkGrammar.o words.o
 	$(CXX) -o $@ $^ $(CXX_FLAGS) $(LD_FLAGS)
 
 sumUniquePairs: sumUniquePairs.cc
