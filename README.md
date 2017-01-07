@@ -1,10 +1,12 @@
 Learn Grammar
 =============
 
+## Introduction ##
+
 The Learn Grammar is an experiment of unsupervised language grammar learning based on previous works
 within OpenCog project by Linas Vepstas and GSoC 2015 student Rohid Shinde.
 
-You can find theoretical introduction to problem solution in Deniz Yureth PhD thesis:
+You can find theoretical introduction to the problem solution in Deniz Yureth PhD thesis:
 - http://www2.denizyuret.com/pub/yuretphd.pdf
 
 Description of the project steps and its current status of implementation in OpenCog you can find here:
@@ -20,3 +22,17 @@ More practical details of previous experiment by Rohid Shinde on OpenCog mailing
 - https://groups.google.com/forum/#!topic/opencog/gmrSdo9OzC8       (automated discovery of grammatical classes)
 - https://groups.google.com/forum/#!topic/opencog/2Ech9y_B8ZY       (Summary of grammar discovery)
 - https://groups.google.com/forum/#!topic/opencog/q0Uac8mJUgs       (Cosine Distance of words)
+
+## Dependencies ##
+
+**Link Grammar Parser**
+
+- https://github.com/opencog/link-grammar
+
+Build and installation of Link Grammar library is required.
+
+**RelEx Semantic Relation Extractor**
+
+- https://github.com/opencog/relex
+
+Build is not required. We are using only a few utility scripts for parsing Wikipedia articles and spliting sentences.
