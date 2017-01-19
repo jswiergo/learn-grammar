@@ -6,8 +6,7 @@ cd $base_dir
 source ./config.sh
 log_file=${logs_dir}/count_articles.log
 
-lang=$1
-filename=$2
+filename=$1
 
 # Logging info
 start_miliseconds=$(($(date +%s%N)/1000000))
@@ -23,7 +22,7 @@ mkdir -p $(dirname "$counted_dir/$rest")
 mkdir -p $(dirname "$finished_dir/$rest")
 
 # Sentence split the article itself
-cat "$filename" | $splitter -l $lang >  "$split_dir/$rest"
+cat "$filename" | $splitter -l $language >  "$split_dir/$rest"
 
 # Counting word pairs pipeline
 cat "$split_dir/$rest" | ./parseWordPairs 2>/dev/null | ./countWordPairs > "$counted_dir/$rest"
