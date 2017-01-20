@@ -2,9 +2,10 @@
 
 base_dir=$(dirname $0)
 cd $base_dir
+base_dir=$(readlink -f .)
 
 source ./config.sh
-log_file=${logs_dir}/fetch_wiki_pages.log
+log_file=${base_dir}/${logs_dir}/fetch_wiki_pages.log
 
 # TODO: move to config.sh
 function log
@@ -31,6 +32,14 @@ function download_file
     echo $status
 }
 
+function scrub_wiki_file
+{
+    local filename=$1
+
+    log "Scrubbing start: $filename"
+    cat $filename | bunzip2 | $wiki_scrubber
+    log "Scrubbing finished: $filename"
+}
 
 function wiki_dump_part_name
 {
@@ -40,8 +49,10 @@ function wiki_dump_part_name
     cat $wiki_dump_index | grep $file_part | cut -d '"' -f2 | grep -v rss
 }
 
-wiki_dump_url=${wiki_latest_dump_url/\{lang\}/$language}
-wiki_dump_file=${wiki_latest_dump_file/\{lang\}/$language}
+mkdir -p $articles_dir
+mkdir -p $wiki_stripped_dir
+cd $articles_dir
+
 wiki_dump_index=${wiki_dump_file/\{part\}/-index.html}
 
 # download wikipedia dumps index file
@@ -53,17 +64,33 @@ downloaded_parts=""
 if [ "$max_wiki_parts" != "" ]; then
     for part in $(seq 1 $max_wiki_parts); do
         file_part=$(wiki_dump_part_name $part)
-        status=$(download_file ${wiki_dump_url}${file_part} $file_part)
-        if [ "$status" == "OK" ]; then
-            downloaded_parts="OK"
-            # TODO: call scrub.pl
-        else
+        if [ "$file_part" == "" ]; then
             break
         fi
+        status=$(download_file ${wiki_dump_url}${file_part} $file_part)
+        if [ "$status" != "OK" ]; then
+            break
+        fi
+        downloaded_parts="OK"
+        scrub_wiki_file $file_part
     done
 fi
 
 # download full dump if necessary
 if [ "$downloaded_parts" != "OK" ]; then
-    echo "full"
+    file_part=$(wiki_dump_part_name)
+    status=$(download_file ${wiki_dump_url}${file_part} $file_part)
+    if [ "$status" == "OK" ]; then
+        scrub_wiki_file $file_part
+    fi
 fi
+
+log "Cleaning articles start"
+cd $base_dir
+cd $wiki_stripped_dir
+${wiki_cleaner/\{lang\}/$language}
+cd $base_dir
+mkdir -p $wiki_pages_dir
+cd $wiki_pages_dir
+$wiki_alpha
+log "Cleaning articles finished"
