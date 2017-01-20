@@ -36,3 +36,23 @@ Build and installation of Link Grammar library is required.
 - https://github.com/opencog/relex
 
 Build is not required. We are using only a few utility scripts for parsing Wikipedia articles and spliting sentences.
+
+## Run experiment ##
+
+1. Configuration
+
+    Edit **config.sh**. Set path to Relex sources. Set experiment language and maximum number of
+    Wikipedia dump files to download.
+
+2. Download Wikipedia dumps
+
+    ```
+    ./fetch-wiki-pages.sh
+    ```
+
+3. Calculate counts of word pairs
+
+    ```
+    ./count-all-word-pairs.sh
+    ./merge-word-pairs-counts.sh
+    ```
