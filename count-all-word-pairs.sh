@@ -1,6 +1,6 @@
 #!/bin/bash
 
-base_dir=$(dirname $0)
-cd $base_dir
+source ./globals.sh
 
-time find ${wiki_pages_dir} -type f -print0 | xargs -0 -n 1 -P 3 ./count-article-word-pairs.sh
+cd $articles_dir
+time find $(basename $wiki_pages_dir) -type f -print0 | xargs -0 -n 1 -P 1 $base_dir/count-article-word-pairs.sh

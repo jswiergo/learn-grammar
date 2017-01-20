@@ -5,6 +5,8 @@ base_dir=$(dirname $0)
 cd $base_dir
 base_dir=$(readlink -f .)
 
+source ./config.sh
+
 # Relex scripts
 splitter=${relex_dir}/src/split-sentences/split-sentences.pl
 wiki_scrubber=${relex_dir}/src/perl/wiki-scrub.pl
