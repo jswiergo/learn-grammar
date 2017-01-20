@@ -1,25 +1,16 @@
 #!/bin/bash
 
+# Language code for language used in experiment. At the moment
+# following languages are supported: en fr gu hi lt pl tl
 lang=en
+
+# Maximum number of Wikipedia articles dump files to download.
+# See: https://dumps.wikimedia.org/enwiki/latest/
+# The file enwiki-latest-pages-articles.xml.bz2 containing all articles
+# has more than 13 GB compressed. If you want to download all articles
+# comment out this variable, otherwise set maximum number of parts.
 max_wiki_parts=2
 
-# Relex
+# Root catalog of Relex sources. We are using only a few scripts from
+# Relex sources.
 relex_dir=/home/jacek/github/relex
-
-splitter=${relex_dir}/src/split-sentences/split-sentences.pl
-wiki_scrubber=${relex_dir}/src/perl/wiki-scrub.pl
-wiki_cleaner=${relex_dir}/src/perl/wiki-clean-${lang}.sh
-wiki_alpha=${relex_dir}/src/perl/wiki-alpha.sh
-
-# Wikipedia
-wiki_dump_url=https://dumps.wikimedia.org/${lang}wiki/latest/
-wiki_dump_file=${lang}wiki-latest-pages-articles\{part\}
-
-# Catalogs
-logs_dir=logs
-articles_dir=articles/${lang}
-wiki_pages_dir=${articles_dir}/wiki-pages
-wiki_stripped_dir=${articles_dir}/wiki-stripped
-split_dir=${articles_dir}/split-articles
-finished_dir=${articles_dir}/finished-articles
-counted_dir=${articles_dir}/counted-articles

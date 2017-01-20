@@ -1,9 +1,8 @@
 #!/bin/bash
 
-base_dir=$(dirname $0)
-cd $base_dir
+source ./globals.sh
 
-source ./config.sh
+log_name=merge_counts
 
 function merge_counted_files
 {
@@ -24,10 +23,11 @@ function merge_counted_files
 for subdir in $(ls -d ${counted_dir}/*); do
     if [ -f ${subdir} ]; then continue; fi
 
-    echo $(date) "Merge ${subdir}"
+    log "Merge start: ${subdir}"
     merge_counted_files "${subdir}/*[!.all]" $subdir
+    log "Merge finished: ${subdir}"
 done
 
-echo $(date) "Final merge"
+log "Final merge start"
 merge_counted_files "${counted_dir}/*/counted.all" $counted_dir
-echo $(date) "Finished"
+log "Final merge finished"

@@ -1,19 +1,8 @@
 #!/bin/bash
 
-base_dir=$(dirname $0)
-cd $base_dir
-base_dir=$(readlink -f .)
+source ./globals.sh
 
-source ./config.sh
-log_file=${base_dir}/${logs_dir}/fetch_wiki_pages.log
-
-# TODO: move to config.sh
-function log
-{
-    local log_entry=$1
-    time=$(date "+%Y-%m-%d %H:%M:%S")
-    echo $time $log_entry >> $log_file
-}
+log_name=fetch_wiki_pages
 
 function download_file
 {

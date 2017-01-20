@@ -1,10 +1,8 @@
 #!/bin/bash
 
-base_dir=$(dirname $0)
-cd $base_dir
+source ./global.sh
 
-source ./config.sh
-log_file=${logs_dir}/count_articles.log
+log_name=count_articles
 
 filename=$1
 
@@ -36,4 +34,4 @@ end_miliseconds=$(($(date +%s%N)/1000000))
 total_miliseconds=$(( $end_miliseconds - $start_miliseconds ))
 total_seconds=$(echo "print $total_miliseconds/1000.0" | python)
 
-echo "$filename: (size=$file_size, time=$total_seconds): OK" >> $log_file
+log "$filename: (size=$file_size, time=$total_seconds): OK"
