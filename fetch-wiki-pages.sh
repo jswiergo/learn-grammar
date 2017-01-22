@@ -30,15 +30,14 @@ function process_wiki_file
     log "Scrubbing finished: $filename"
 
     log "Cleaning start: $filename"
-    cd $base_dir
     cd $wiki_stripped_dir
-    ${wiki_cleaner/\{lang\}/$language}
-    cd $base_dir
+   ${wiki_cleaner/\{lang\}/$language}
+    cd $articles_dir
     log "Cleaning end: $filename"
 
     log "Separation start: $filename"
     mkdir -p $wiki_pages_dir
-    ./separateFiles.py $wiki_stripped_dir $wiki_pages_dir
+    ${base_dir}/separateFiles.py $wiki_stripped_dir $wiki_pages_dir
     log "Separation end: $filename"
 }
 
@@ -57,8 +56,10 @@ cd $articles_dir
 wiki_dump_index=${wiki_dump_file/\{part\}/-index.html}
 
 # download wikipedia dumps index file
-# TODO: catch errors
-download_file $wiki_dump_url $wiki_dump_index >> /dev/null
+status=$(download_file $wiki_dump_url $wiki_dump_index)
+if [ "$status" != "OK" ]; then
+    exit 1
+fi
 
 # download partial dumps
 downloaded_parts=""
