@@ -1,0 +1,9 @@
+articles
+*.o
+
+calcWordPairsMI
+countWordPairs
+mergeWordPairs
+parseWordIndexes
+parseWordPairs
+sumUniquePairs
