@@ -21,13 +21,25 @@ function download_file
     echo $status
 }
 
-function scrub_wiki_file
+function process_wiki_file
 {
     local filename=$1
 
     log "Scrubbing start: $filename"
     cat $filename | bunzip2 | $wiki_scrubber
     log "Scrubbing finished: $filename"
+
+    log "Cleaning start: $filename"
+    cd $base_dir
+    cd $wiki_stripped_dir
+    ${wiki_cleaner/\{lang\}/$language}
+    cd $base_dir
+    log "Cleaning end: $filename"
+
+    log "Separation start: $filename"
+    mkdir -p $wiki_pages_dir
+    ./separateFiles.py $wiki_stripped_dir $wiki_pages_dir
+    log "Separation end: $filename"
 }
 
 function wiki_dump_part_name
@@ -61,7 +73,7 @@ if [ "$max_wiki_parts" != "" ]; then
             break
         fi
         downloaded_parts="OK"
-        scrub_wiki_file $file_part
+        process_wiki_file $file_part
     done
 fi
 
@@ -70,16 +82,6 @@ if [ "$downloaded_parts" != "OK" ]; then
     file_part=$(wiki_dump_part_name)
     status=$(download_file ${wiki_dump_url}${file_part} $file_part)
     if [ "$status" == "OK" ]; then
-        scrub_wiki_file $file_part
+        process_wiki_file $file_part
     fi
 fi
-
-log "Cleaning articles start"
-cd $base_dir
-cd $wiki_stripped_dir
-${wiki_cleaner/\{lang\}/$language}
-cd $base_dir
-mkdir -p $wiki_pages_dir
-cd $wiki_pages_dir
-$wiki_alpha
-log "Cleaning articles finished"
