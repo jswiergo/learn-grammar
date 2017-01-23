@@ -18,7 +18,10 @@ void translate_sentence_to_word_indexes(const string& line, ostream& os)
         if (i > 0) os << " ";
         os << words.get_index(sentence_words[i]);
     }
-    os << endl;
+    if (sentence_words.size() > 0)
+    {
+        os << endl;
+    }
 }
 
 void translate_article_to_word_indexes(istream& is, ostream& os)

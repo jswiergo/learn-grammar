@@ -70,7 +70,11 @@ void LinkGrammar::translate_sentence_to_words(const string& line, vector<string>
     Sentence sent = sentence_create(line.c_str(), dict);
     sentence_split(sent, opts);
     int num_linkages = sentence_parse(sent, opts);
-    if (num_linkages == 0) return;
+    if (num_linkages <= 0)
+    {
+        sentence_delete(sent);
+        return;
+    }
 
     Linkage linkage = linkage_create(0, sent, opts);
     size_t num_words = linkage_get_num_words(linkage);
