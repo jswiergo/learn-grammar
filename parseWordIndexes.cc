@@ -37,7 +37,7 @@ int main(int argc, char** argv)
 {
     if (argc < 3)
     {
-        cerr << "usage: " << argv[0] << " <words_filename> <output_suffix> <articles>...." << endl;
+        cerr << "usage: " << argv[0] << " <words_filename> <output_dir> <articles>...." << endl;
         exit(1);
     }
 
@@ -48,11 +48,12 @@ int main(int argc, char** argv)
 
     link_grammar.init(1);
 
-    string suffix = argv[2];
+    string output_dir = argv[2];
     for (int i = 3; i < argc; ++i)
     {
         string article_filename = argv[i];
-        string output_filename = string(argv[i]) + "." + suffix;
+        string article_name = article_filename.substr(article_filename.find_last_of("/")+1);
+        string output_filename = output_dir + "/" + article_name;
         ifstream article_file;
         ofstream output_file;
         article_file.open(article_filename);
