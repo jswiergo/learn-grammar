@@ -8,10 +8,11 @@ function merge_counted_files
 {
     local input_glob=$1
     local outdir=$2
+    local name=$3
 
-    file_counted="${outdir}/counted.all"
-    file_pairs="${outdir}/pairs.all"
-    file_unique="${outdir}/unique.all"
+    file_counted="${outdir}/${name}.counted"
+    file_pairs="${outdir}/${name}.pairs"
+    file_unique="${outdir}/${name}.unique"
 
     ./exec.py "${input_glob}" ./mergeWordPairs $file_counted $file_pairs
     sort -k1,2 $file_pairs | ./sumUniquePairs > $file_unique
@@ -24,10 +25,11 @@ for subdir in $(ls -d ${counted_dir}/*); do
     if [ -f ${subdir} ]; then continue; fi
 
     log "Merge start: ${subdir}"
-    merge_counted_files "${subdir}/*[!.all]" $subdir
+    merge_counted_files "${subdir}/*" $counted_dir $(basename $subdir)
     log "Merge finished: ${subdir}"
 done
 
 log "Final merge start"
-merge_counted_files "${counted_dir}/*/counted.all" $counted_dir
+rm -f ${counted_dir}/word_pairs.counted
+merge_counted_files "${counted_dir}/*.counted" $counted_dir "word_pairs"
 log "Final merge finished"
