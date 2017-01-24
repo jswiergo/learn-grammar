@@ -1,3 +1,6 @@
+#ifndef _KRUSKAL_H
+#define _KRUSKAL_H
+
 #include <vector>
 #include <queue>
 #include "unionSet.h"
@@ -37,3 +40,5 @@ Kruskal<KeyT,WeightT>::maximum_spanning_tree(const vector<Node>& nodes, const ve
     }
     return spanning_tree;
 }
+
+#endif // _KRUSKAL_H

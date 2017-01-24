@@ -1,3 +1,6 @@
+#ifndef _LINK_GRAMMAR_H
+#define _LINK_GRAMMAR_H
+
 #include <string>
 #include <vector>
 #include <link-grammar/link-includes.h>
@@ -23,3 +26,5 @@ public:
     void translate_sentence_to_word_pairs(const string& line,
                                           vector<pair<string, string>>& word_pairs);
 };
+
+#endif // _LINK_GRAMMAR_H

@@ -1,3 +1,6 @@
+#ifndef _WORDS_H
+#define _WORDS_H
+
 #include <iostream>
 #include <string>
 #include <vector>
@@ -39,3 +42,5 @@ public:
     void load(istream& is, bool merging=false);
     void save(ostream& os);
 };
+
+#endif // _WORDS_H

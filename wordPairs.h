@@ -1,3 +1,6 @@
+#ifndef _WORD_PAIRS_H
+#define _WORD_PAIRS_H
+
 #include <iostream>
 #include <string>
 #include <unordered_map>
@@ -44,3 +47,5 @@ public:
     // translate line by line without memory usage
     void translate(istream& is, ostream& os);
 };
+
+#endif // _WORD_PAIRS_H

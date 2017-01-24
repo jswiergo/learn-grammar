@@ -1,3 +1,6 @@
+#ifndef _DISJUNCT_H
+#define _DISJUNCT_H
+
 #include <string>
 #include <vector>
 #include "words.h"
@@ -19,3 +22,5 @@ public:
 
     string to_string();
 };
+
+#endif // _DISJUNCT_H

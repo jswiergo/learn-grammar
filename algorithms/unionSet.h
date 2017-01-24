@@ -1,3 +1,6 @@
+#ifndef _UNION_SET_H
+#define _UNION_SET_H
+
 #include <vector>
 #include <unordered_map>
 
@@ -105,3 +108,5 @@ void UnionSet<T>::union_sets(const T& v1, const T& v2)
     if (nodes.find(v2) == nodes.end()) return;
     union_sets(nodes[v1], nodes[v2]);
 }
+
+#endif // _UNION_SET_H
