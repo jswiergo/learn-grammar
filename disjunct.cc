@@ -8,22 +8,22 @@ void Disjunct::sort_connectors()
     sort(plusConnectors.begin(), plusConnectors.end());
 }
 
-string Disjunct::to_string()
+string Disjunct::to_string() const
 {
     stringstream ss;
     bool first = true;
 
-    for (auto it = minusConnectors.begin(); it != minusConnectors.end(); ++it)
+    for (auto conn: minusConnectors)
     {
         if (!first) ss << "\t";
         first = false;
-        ss << *it;
+        ss << conn;
     }
     if (!first) ss << "\t";
     ss << "|";
-    for (auto it = minusConnectors.begin(); it != minusConnectors.end(); ++it)
+    for (auto conn: plusConnectors)
     {
-        ss << "\t" << *it;
+        ss << "\t" << conn;
     }
 
     return ss.str();

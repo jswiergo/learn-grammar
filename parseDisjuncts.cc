@@ -5,7 +5,8 @@
 #include <vector>
 #include "algorithms/kruskal.h"
 #include "wordPairs.h"
-#include "disjunct.h"
+#include "disjuncts.h"
+#include "wordDisjuncts.h"
 
 using namespace std;
 
@@ -15,6 +16,8 @@ typedef KruskalT::Edge EdgeT;
 
 Words words;
 WordPairs word_pairs(words);
+Disjuncts disjuncts;
+WordDisjuncts word_disjuncts;
 
 vector<IdxT> parse_word_indexes_from_sentence(const string& sentence)
 {
@@ -51,6 +54,19 @@ void parse_disjuncts_from_sentence(const string& sentence)
     }
     vector<EdgeT> tree_edges = KruskalT::maximum_spanning_tree(nodes, edges);
 
+    for (auto edge: tree_edges)
+    {
+        IdxT i = edge.first.first;
+        IdxT j = edge.first.second;
+        sentence_disjuncts[i].add_plus_connector(j);
+        sentence_disjuncts[j].add_minus_connector(i);
+    }
+    for (IdxT i = 0; i < number_of_words; ++i)
+    {
+        sentence_disjuncts[i].sort_connectors();
+        IdxT disjunct_index = disjuncts.insert(sentence_disjuncts[i]);
+        word_disjuncts.insert(word_indexes[i], disjunct_index);
+    }
 }
 
 void parse_disjuncts_from_article(istream& istream)
@@ -87,6 +103,9 @@ int main(int argc, char** argv)
         output_file.open(output_filename);
 
         parse_disjuncts_from_article(article_file);
+
+        disjuncts.save(output_file);
+        word_disjuncts.save(output_file);
 
         article_file.close();
         output_file.close();

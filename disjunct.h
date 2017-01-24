@@ -20,7 +20,7 @@ public:
     void add_plus_connector(IdxT idx) { plusConnectors.push_back(idx); };
     void sort_connectors();
 
-    string to_string();
+    string to_string() const;
 };
 
 #endif // _DISJUNCT_H
