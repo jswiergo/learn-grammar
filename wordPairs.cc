@@ -10,7 +10,7 @@ void WordPairs::count_word_pair(PairIdxT pair_index, int count)
     {
         word_pair_counts[pair_index] += count;
     } else {
-        word_pair_counts.insert(make_pair(pair_index, count));
+        word_pair_counts.insert({pair_index, count});
     }
 }
 
@@ -18,13 +18,13 @@ void WordPairs::insert(const string& word1, const string& word2, int count)
 {
     IdxT index1 = words.insert(word1, count, 0);
     IdxT index2 = words.insert(word2, 0, count);
-    PairIdxT pair_index = make_pair(index1, index2);
+    PairIdxT pair_index = {index1, index2};
     count_word_pair(pair_index, count);
 }
 
 void WordPairs::insert_word_pair_MI(PairIdxT pair_index, entropy_t mi)
 {
-    word_pair_MIs.insert(make_pair(pair_index, mi));
+    word_pair_MIs.insert({pair_index, mi});
 }
 
 entropy_t WordPairs::get_word_pair_MI(PairIdxT pair_index)
@@ -62,7 +62,7 @@ void WordPairs::load_MI(istream& istream)
         IdxT idx1 = stoi(token1);
         IdxT idx2 = stoi(token2);
         entropy_t mi = stod(token3);
-        insert_word_pair_MI(make_pair(idx1, idx2), mi);
+        insert_word_pair_MI({idx1, idx2}, mi);
     }
 }
 

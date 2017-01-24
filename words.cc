@@ -16,7 +16,7 @@ IdxT Words::insert(const string& word, int left_count, int right_count)
     {
         index = words.size();
         words.push_back(word);
-        words_index.insert(make_pair(word, index));
+        words_index.insert({word, index});
         word_left_counts.push_back(left_count);
         word_right_counts.push_back(right_count);
     }

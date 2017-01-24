@@ -55,9 +55,9 @@ void LinkGrammar::translate_sentence_to_word_pairs(const string& line,
         for(int j = 0; j < num_links; ++j) {
             int lword = linkage_get_link_lword(linkage, j);
             int rword = linkage_get_link_rword(linkage, j);
-            pair<string, string> word_pair = make_pair(
+            pair<string, string> word_pair = {
                 strip_linkage_word(linkage_get_word(linkage, lword)),
-                strip_linkage_word(linkage_get_word(linkage, rword)));
+                strip_linkage_word(linkage_get_word(linkage, rword))};
             word_pairs.push_back(word_pair);
         }
         linkage_delete(linkage);
