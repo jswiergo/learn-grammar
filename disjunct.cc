@@ -11,19 +11,16 @@ void Disjunct::sort_connectors()
 string Disjunct::to_string() const
 {
     stringstream ss;
-    bool first = true;
 
+    ss << minusConnectors.size();
     for (auto conn: minusConnectors)
     {
-        if (!first) ss << "\t";
-        first = false;
-        ss << conn;
+        ss << " " << conn;
     }
-    if (!first) ss << "\t";
-    ss << "|";
+    ss << " " << plusConnectors.size();
     for (auto conn: plusConnectors)
     {
-        ss << "\t" << conn;
+        ss << " " << conn;
     }
 
     return ss.str();
