@@ -50,6 +50,7 @@ void WordPairs::load_MI(istream& istream)
         getline(istream, line);
     }
 
+    getline(istream, line);
     IdxT total_word_pairs = stoi(line);
     for (IdxT i = 0; i < total_word_pairs; ++i)
     {

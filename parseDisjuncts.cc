@@ -24,7 +24,7 @@ vector<IdxT> parse_word_indexes_from_sentence(const string& sentence)
     vector<IdxT> word_indexes;
     stringstream ss(sentence);
     string token;
-    while (getline(ss, token, '\t'))
+    while (getline(ss, token, ' '))
     {
         word_indexes.push_back(stoi(token));
     }
@@ -58,8 +58,8 @@ void parse_disjuncts_from_sentence(const string& sentence)
     {
         IdxT i = edge.first.first;
         IdxT j = edge.first.second;
-        sentence_disjuncts[i].add_plus_connector(j);
-        sentence_disjuncts[j].add_minus_connector(i);
+        sentence_disjuncts[i].add_plus_connector(word_indexes[j]);
+        sentence_disjuncts[j].add_minus_connector(word_indexes[i]);
     }
     for (IdxT i = 0; i < number_of_words; ++i)
     {
