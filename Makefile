@@ -8,7 +8,7 @@ PROGRAMS = parseWordPairs \
            countWordPairs \
            mergeWordPairs \
            calcWordPairsMI \
-           parseDisjucts
+           parseDisjuncts
 
 .PHONY: all clean
 
@@ -38,5 +38,5 @@ mergeWordPairs: mergeWordPairs.cc words.o wordPairs.o
 calcWordPairsMI: calcWordPairsMI.cc words.o
 	$(CXX) -o $@ $^ $(CXX_FLAGS)
 
-parseDisjucts: parseDisjuncts.cc words.o wordPairs.o disjunct.o disjuncts.o wordDisjuncts.o
+parseDisjuncts: parseDisjuncts.cc words.o wordPairs.o disjunct.o disjuncts.o wordDisjuncts.o
 	$(CXX) -o $@ $^ $(CXX_FLAGS)

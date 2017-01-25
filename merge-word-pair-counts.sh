@@ -33,3 +33,7 @@ log "Final merge start"
 rm -f ${counted_articles_dir}/word_pairs.counted
 merge_counted_files "${counted_articles_dir}/*.counted" $counted_articles_dir "word_pairs"
 log "Final merge finished"
+
+log "Calculate word pairs mutual information start"
+cat $counted_articles_dir/word_pairs.counted | ./calcWordPairsMI > $counted_articles_dir/word_pairs.mi
+log "Calculate word pairs mutual information finished"

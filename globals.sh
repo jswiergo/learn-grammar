@@ -29,7 +29,7 @@ split_articles_after_count_dir=${articles_dir}/5-split-articles
 indexed_articles_dir=${articles_dir}/6-indexed-articles
 split_articles_after_parse_dir=${articles_dir}/7-split-articles
 articles_disjuncts_dir=${articles_dir}/8-articles-disjuncts
-indesxed_articles_after_parse_dir=${articles_dir}/9-indexed-articles
+indexed_articles_after_parse_dir=${articles_dir}/9-indexed-articles
 
 # Logging
 function log

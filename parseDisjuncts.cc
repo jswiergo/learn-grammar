@@ -82,7 +82,7 @@ int main(int argc, char** argv)
 {
     if (argc < 3)
     {
-        cerr << "usage: " << argv[0] << " <words_mi_filename> <output_dir> <articles>...." << endl;
+        cerr << "usage: " << argv[0] << " <words_mi_filename> <output_dir> <move_articles_dir> <articles>...." << endl;
         exit(1);
     }
 
@@ -92,7 +92,8 @@ int main(int argc, char** argv)
     word_pairs.load_MI(words_mi_file);
 
     string output_dir = argv[2];
-    for (int i = 3; i < argc; ++i)
+    string move_articles_dir = argv[3];
+    for (int i = 4; i < argc; ++i)
     {
         string article_filename = argv[i];
         string article_name = article_filename.substr(article_filename.find_last_of("/")+1);
@@ -109,5 +110,8 @@ int main(int argc, char** argv)
 
         article_file.close();
         output_file.close();
+
+        string moved_article_filename = move_articles_dir + "/" + article_name;
+        rename(article_filename.c_str(), moved_article_filename.c_str());
     }
 }
