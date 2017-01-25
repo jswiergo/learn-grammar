@@ -1,3 +1,4 @@
+#include <cstdio>
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -37,7 +38,7 @@ int main(int argc, char** argv)
 {
     if (argc < 3)
     {
-        cerr << "usage: " << argv[0] << " <words_filename> <output_dir> <articles>...." << endl;
+        cerr << "usage: " << argv[0] << " <words_filename> <output_dir> <move_articles_dir> <articles>...." << endl;
         exit(1);
     }
 
@@ -49,7 +50,8 @@ int main(int argc, char** argv)
     link_grammar.init(1);
 
     string output_dir = argv[2];
-    for (int i = 3; i < argc; ++i)
+    string move_articles_dir = argv[3];
+    for (int i = 4; i < argc; ++i)
     {
         string article_filename = argv[i];
         string article_name = article_filename.substr(article_filename.find_last_of("/")+1);
@@ -63,5 +65,8 @@ int main(int argc, char** argv)
 
         article_file.close();
         output_file.close();
+
+        string moved_article_filename = move_articles_dir + "/" + article_name;
+        rename(article_filename, moved_article_filename);
     }
 }
