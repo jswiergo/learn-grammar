@@ -67,6 +67,6 @@ int main(int argc, char** argv)
         output_file.close();
 
         string moved_article_filename = move_articles_dir + "/" + article_name;
-        rename(article_filename, moved_article_filename);
+        rename(article_filename.c_str(), moved_article_filename.c_str());
     }
 }
