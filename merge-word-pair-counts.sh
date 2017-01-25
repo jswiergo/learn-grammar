@@ -21,15 +21,15 @@ function merge_counted_files
     rm $file_pairs $file_unique
 }
 
-for subdir in $(ls -d ${counted_dir}/*); do
+for subdir in $(ls -d ${counted_articles_dir}/*); do
     if [ -f ${subdir} ]; then continue; fi
 
     log "Merge start: ${subdir}"
-    merge_counted_files "${subdir}/*" $counted_dir $(basename $subdir)
+    merge_counted_files "${subdir}/*" $counted_articles_dir $(basename $subdir)
     log "Merge finished: ${subdir}"
 done
 
 log "Final merge start"
-rm -f ${counted_dir}/word_pairs.counted
-merge_counted_files "${counted_dir}/*.counted" $counted_dir "word_pairs"
+rm -f ${counted_articles_dir}/word_pairs.counted
+merge_counted_files "${counted_articles_dir}/*.counted" $counted_articles_dir "word_pairs"
 log "Final merge finished"

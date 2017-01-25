@@ -20,11 +20,16 @@ wiki_dump_file=${lang}wiki-latest-pages-articles\{part\}
 # Catalogs
 logs_dir=${base_dir}/logs
 articles_dir=${base_dir}/articles/${lang}
-wiki_pages_dir=${articles_dir}/wiki-pages
 wiki_stripped_dir=${articles_dir}/wiki-stripped
-split_dir=${articles_dir}/split-articles
-finished_dir=${articles_dir}/finished-articles
-counted_dir=${articles_dir}/counted-articles
+wiki_pages_dir=${articles_dir}/1-wiki-pages
+split_articles_dir=${articles_dir}/2-split-articles
+counted_articles_dir=${articles_dir}/3-counted-articles
+wiki_pages_after_count_dir=${articles_dir}/4-wiki-pages
+split_articles_after_count_dir=${articles_dir}/5-split-articles
+indexed_articles_dir=${articles_dir}/6-indexed-articles
+split_articles_after_parse_dir=${articles_dir}/7-split-articles
+articles_disjuncts_dir=${articles_dir}/8-articles-disjuncts
+indesxed_articles_after_parse_dir=${articles_dir}/9-indexed-articles
 
 # Logging
 function log
